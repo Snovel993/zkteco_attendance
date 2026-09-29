@@ -527,6 +527,7 @@ function showEmployeeMappingDialog(frm, res) {
                                 <input type="checkbox" class="zk-emp-select-all"
                                        title="${__("Select visible rows")}" />
                             </th>
+                            <th style="width:110px;">${__("Status")}</th>
                             <th style="width:110px;">${__("Device ID")}</th>
                             <th>${__("Name On Device")}</th>
                             <th style="width:130px;">${__("Current Employee")}</th>
