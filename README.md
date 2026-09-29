@@ -46,6 +46,7 @@ rm -rf ~/frappe-bench/apps/zkteco_attendance
 sed -i '/zkteco_attendance/d' ~/frappe-bench/sites/apps.txt
 ```
 
+### What the Installation automatically creates
 Installation automatically:
 - Creates **Biometric Device Manager**, **Checkin Editor**, and
   **Checkin Request Approver** roles
@@ -57,7 +58,7 @@ Installation automatically:
 - Adds the **Biometric Attendance** workspace with a **Check-ins
   (Last 7 Days)** chart
 
-> The two Employee fields above are created automatically on install —
+> The two Employee fields above are created automatically after install —
 > only create them yourself if you need them before installing the app.
 
 ---
@@ -78,12 +79,7 @@ or delete them. Cancelling a submitted request reverts the check-in it
 applied — a request that edited an existing check-in restores the
 original values, while a request that created a new check-in deletes it.
 
-### 2.3 Map employees to the device
-On each **Employee** record, fill in **Biometric Device** and
-**Biometric Attendance ID** — the attendance ID must match the User
-ID/Badge Number enrolled on the ZKTeco device for that person.
-
-### 2.4 Add a Biometric Device
+### 2.3 Add a Biometric Device
 Go to **Biometric Device** (new) and fill in:
 
 | Field | Notes |
@@ -102,6 +98,31 @@ Go to **Biometric Device** (new) and fill in:
 
 Click **Test Connection** to verify the device responds and to see its
 serial number, firmware, enrolled users, and stored log count.
+
+### 2.4 Map employees to the device
+Use **Browse Employees On Device** on a saved **Biometric Device** record
+to view the users enrolled on the ZKTeco device and map them to ERPNext
+Employees:
+
+1. Enter and save the device's IP address, connection details, and
+  **Company**, then enable the device. The button requires a saved IP and
+  an enabled device.
+2. Open the device and choose **Browse Employees On Device** from
+  **Actions**. The app connects to the device and lists each enrolled
+  user's **Device ID** and **Name On Device**, plus any current Employee
+  mapping.
+3. Search by device ID or name if needed. Select the rows to update, choose
+  an **Employee** for each, and optionally choose a **Shift Type**. The
+  Employee must belong to the device's Company.
+4. Click **Map Selected Rows**. Only selected rows are changed. The mapping
+  fills in **Biometric Device** and **Biometric Attendance ID** on each
+  Employee; a selected row with no Employee clears that device user's
+  mapping. Choosing a Shift Type assigns the employee to that shift, while
+  leaving Shift Type blank removes their current ZK Shift Assignment.
+
+You can also set **Biometric Device** and **Biometric Attendance ID**
+directly on each **Employee** record. The attendance ID must match the
+User ID/Badge Number enrolled on the ZKTeco device for that person.
 
 ### 2.4 Set up Shift Types
 Create one or more **ZK Shift Type** records:
