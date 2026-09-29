@@ -9,7 +9,7 @@ and v16.
 
 ## 1. Installation
 
-### Fresh install
+### 1.1 Fresh install
 
 Make sure the `pyzk` Python library is available (used to talk to the
 device over the network):
@@ -26,7 +26,7 @@ bench --site frappe.com migrate
 bench restart
 ```
 
-### Update
+### 1.2 Update
 
 ### To update when there changes after installations
 
@@ -40,6 +40,7 @@ bench build --app zkteco_attendance
 bench restart
 ```
 
+### 1.3 Uninstall
 ### To Uninstall and Clean up if needed
 ```bash
 cd ~/frappe-bench

@@ -477,8 +477,8 @@ function showEmployeeMappingDialog(frm, res) {
 
     const rows_html = users.map(u => {
         const badge = u.employee
-            ? `<span class="indicator green" title="${frappe.utils.escape_html(u.employee_name || u.employee)}"></span>`
-            : `<span class="indicator orange" title="${__("Not mapped")}"></span>`;
+            ? `<span class="label label-success" style="display:inline-block; padding:4px 9px; border-radius:999px; font-size:11px; font-weight:600; line-height:1.2;" title="${frappe.utils.escape_html(u.employee_name || u.employee)}">${__("Mapped")}</span>`
+            : `<span class="label" style="display:inline-block; padding:4px 9px; border-radius:999px; font-size:11px; font-weight:600; line-height:1.2; background:#fef3c7; color:#92400e;" title="${__("Not mapped")}">${__("Not mapped")}</span>`;
         const emp_label = u.employee
             ? frappe.utils.escape_html(u.employee_name || u.employee)
             : "";
@@ -493,7 +493,7 @@ function showEmployeeMappingDialog(frm, res) {
                 <td class="text-center" style="width:36px;">${badge}</td>
                 <td style="width:110px;"><b>${frappe.utils.escape_html(u.user_id)}</b></td>
                 <td>${frappe.utils.escape_html(u.name || "—")}</td>
-                <td class="text-muted" style="width:160px;">${emp_label}</td>
+                
                 <td class="text-muted" style="width:160px;">${emp_label_name}</td>
                 <td style="min-width:240px;">
                     <div class="zk-emp-link-target"
@@ -527,11 +527,11 @@ function showEmployeeMappingDialog(frm, res) {
                                 <input type="checkbox" class="zk-emp-select-all"
                                        title="${__("Select visible rows")}" />
                             </th>
-                            <th style="width:110px;">${__("Status")}</th>
+                            <th style="width:90px;">${__("Status")}</th>
                             <th style="width:110px;">${__("Device ID")}</th>
                             <th>${__("Name On Device")}</th>
-                            <th style="width:130px;">${__("Current Employee")}</th>
-                            <th style="width:160px;">${__("Current Emp Name")}</th>
+                            
+                            <th style="width:160px;">${__("Current Mapped Employee")}</th>
                             <th style="min-width:240px;">${__("Employee")}</th>
                             <th style="min-width:180px;">${__("Shift Type")}</th>
                         </tr>
