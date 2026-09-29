@@ -14,9 +14,6 @@ and v16.
 Make sure the `pyzk` Python library is available (used to talk to the
 device over the network):
 
-```bash
-pip install pyzk --break-system-packages
-```
 
 ```bash
 cd frappe-bench
