@@ -586,6 +586,8 @@ def create_manual_checkin_request(employee=None, checkin_date=None, checkin_time
         frappe.throw(_("Employee, Check-in Date, and Check-in Time are required."))
     if log_type not in ("IN", "OUT"):
         frappe.throw(_("Log Type must be IN or OUT."))
+    if not request_type:
+        request_type = "New"
     if request_type not in ("New", "Edit"):
         frappe.throw(_("Request Type must be New or Edit."))
     if request_type == "Edit" and not checkin_name:

@@ -315,6 +315,50 @@ class TestCreateManualCheckinRequestEndpoint(unittest.TestCase):
         inserted = mock_get_doc.call_args[0][0]
         self.assertEqual(inserted["request_remarks"], "Gate was locked")
 
+    @patch("frappe.db.commit")
+    @patch("frappe.get_doc")
+    def test_endpoint_stores_request_type_edit(self, mock_get_doc, mock_commit):
+        from zkteco_attendance.zkteco_attendance.api.endpoints import create_manual_checkin_request
+
+        fake_doc = MagicMock()
+        fake_doc.name = "MAN-CHK-2026-00003"
+        mock_get_doc.return_value = fake_doc
+
+        create_manual_checkin_request(
+            employee="HR-EMP-00001",
+            checkin_date="2026-08-10",
+            checkin_time="08:00:00",
+            log_type="IN",
+            request_type="Edit",
+            checkin_name="CHK-00001",
+        )
+
+        inserted = mock_get_doc.call_args[0][0]
+        self.assertEqual(inserted["request_type"], "Edit")
+        self.assertEqual(inserted["checkin_name"], "CHK-00001")
+
+    @patch("frappe.db.commit")
+    @patch("frappe.get_doc")
+    def test_endpoint_defaults_missing_request_type_to_new(self, mock_get_doc, mock_commit):
+        """Callers that omit request_type (e.g. the Attendance Summary dialog)
+        must still get a "New" request."""
+        from zkteco_attendance.zkteco_attendance.api.endpoints import create_manual_checkin_request
+
+        fake_doc = MagicMock()
+        fake_doc.name = "MAN-CHK-2026-00004"
+        mock_get_doc.return_value = fake_doc
+
+        create_manual_checkin_request(
+            employee="HR-EMP-00001",
+            checkin_date="2026-08-10",
+            checkin_time="08:00:00",
+            log_type="IN",
+            request_type=None,
+        )
+
+        inserted = mock_get_doc.call_args[0][0]
+        self.assertEqual(inserted["request_type"], "New")
+
     def test_endpoint_requires_employee_date_time(self):
         from zkteco_attendance.zkteco_attendance.api.endpoints import create_manual_checkin_request
 
