@@ -182,10 +182,12 @@ class TestExcelWorkbook(unittest.TestCase):
         self.assertEqual(headers[20], "Check-ins")
 
         summary = wb["Summary"]
-        s_headers = [summary.cell(row=4, column=c).value for c in range(1, 18)]
+        s_headers = [summary.cell(row=4, column=c).value for c in range(1, 20)]
         self.assertEqual(s_headers[0], "Employee ID")
         self.assertEqual(s_headers[7], "Working Days")
-        self.assertEqual(s_headers[16], "Total OT")
+        self.assertEqual(s_headers[9], "Late (min)")
+        self.assertEqual(s_headers[10], "Early (min)")
+        self.assertEqual(s_headers[18], "Total OT")
 
     def test_daily_sheet_has_one_row_per_employee_day(self):
         wb = _load_workbook(_sample_data())
@@ -226,20 +228,26 @@ class TestExcelWorkbook(unittest.TestCase):
         #                = 1.0 + 0.5 + 1.0 + 1.0 = 3.5 days
         self.assertEqual(summary.cell(row=5, column=1).value, "EMP-0001")
         self.assertAlmostEqual(summary.cell(row=5, column=8).value, 3.5, places=2)
-        self.assertAlmostEqual(summary.cell(row=5, column=12).value, 19.6, places=2)
-        self.assertAlmostEqual(summary.cell(row=5, column=13).value, 0.5, places=2)
-        self.assertAlmostEqual(summary.cell(row=5, column=17).value, 0.5, places=2)
+        # Late/early minutes sit right after Absent Days
+        self.assertEqual(summary.cell(row=5, column=10).value, 12)  # Half Day late
+        self.assertEqual(summary.cell(row=5, column=11).value, 0)
+        self.assertAlmostEqual(summary.cell(row=5, column=14).value, 19.6, places=2)
+        self.assertAlmostEqual(summary.cell(row=5, column=15).value, 0.5, places=2)
+        self.assertAlmostEqual(summary.cell(row=5, column=19).value, 0.5, places=2)
 
         # Row 6 = EMP-0002: 1 working day, 9.0 h
         self.assertEqual(summary.cell(row=6, column=1).value, "EMP-0002")
         self.assertAlmostEqual(summary.cell(row=6, column=8).value, 1.0, places=2)
-        self.assertAlmostEqual(summary.cell(row=6, column=12).value, 9.0, places=2)
+        self.assertEqual(summary.cell(row=6, column=10).value, 0)
+        self.assertAlmostEqual(summary.cell(row=6, column=14).value, 9.0, places=2)
 
         # Row 7 = grand totals
         self.assertEqual(summary.cell(row=7, column=1).value, "Grand Total")
         self.assertAlmostEqual(summary.cell(row=7, column=8).value, 4.5, places=2)
-        self.assertAlmostEqual(summary.cell(row=7, column=12).value, 28.6, places=2)
-        self.assertAlmostEqual(summary.cell(row=7, column=17).value, 0.5, places=2)
+        self.assertEqual(summary.cell(row=7, column=10).value, 12)
+        self.assertEqual(summary.cell(row=7, column=11).value, 0)
+        self.assertAlmostEqual(summary.cell(row=7, column=14).value, 28.6, places=2)
+        self.assertAlmostEqual(summary.cell(row=7, column=19).value, 0.5, places=2)
 
     def test_empty_state_produces_headers_only(self):
         wb = _load_workbook({

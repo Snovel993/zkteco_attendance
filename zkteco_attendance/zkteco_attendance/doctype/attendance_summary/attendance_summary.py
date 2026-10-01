@@ -63,6 +63,34 @@ class AttendanceSummary(Document):
             remark=remark,
         )
 
+    # ── called by JS "Download PDF" / "Download Excel" ─────────────────────
+    @frappe.whitelist()
+    def download_summary_pdf(self):
+        """Stream this summary's Daily Checkins report as a styled PDF."""
+        from zkteco_attendance.zkteco_attendance.attendance_processor import get_daily_checkins_data
+        from zkteco_attendance.zkteco_attendance.page.zk_daily_checkins.zk_daily_checkins import _render_pdf_html
+        from frappe.utils.pdf import get_pdf
+
+        data = get_daily_checkins_data(attendance_summary=self.name)
+        pdf = get_pdf(_render_pdf_html(data))
+
+        frappe.local.response.type = "pdf"
+        frappe.local.response.filename = "Attendance_Summary_{0}.pdf".format(self.name)
+        frappe.local.response.filecontent = pdf
+
+    @frappe.whitelist()
+    def download_summary_excel(self):
+        """Stream this summary's Daily Checkins report as an .xlsx workbook."""
+        from zkteco_attendance.zkteco_attendance.attendance_processor import get_daily_checkins_data
+        from zkteco_attendance.zkteco_attendance.page.zk_daily_checkins.zk_daily_checkins import _build_excel_workbook
+
+        data = get_daily_checkins_data(attendance_summary=self.name)
+        xlsx = _build_excel_workbook(data)
+
+        frappe.local.response.type = "binary"
+        frappe.local.response.filename = "Attendance_Summary_{0}.xlsx".format(self.name)
+        frappe.local.response.filecontent = xlsx
+
     # ── called by JS "Process Attendance" ────────────────────────────────────
     @frappe.whitelist()
     def process_attendance(self):

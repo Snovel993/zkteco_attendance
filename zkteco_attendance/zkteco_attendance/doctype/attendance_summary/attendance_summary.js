@@ -54,6 +54,27 @@ frappe.ui.form.on("Attendance Summary", {
                 frappe.set_route("zk-daily-checkins", frm.doc.name);
             }, __("View"));
 
+            // ── Download PDF / Excel (only once processing is complete) ──
+            if (frm.doc.status === "Completed") {
+                frm.add_custom_button(__("Download PDF"), function () {
+                    const url = "/api/method/" +
+                        "zkteco_attendance.zkteco_attendance.doctype.attendance_summary.attendance_summary" +
+                        ".download_summary_pdf" +
+                        "?name=" + encodeURIComponent(frm.doc.name);
+                    frappe.show_alert({ message: __("Preparing PDF download…"), indicator: "blue" }, 4);
+                    window.location.href = url;
+                }, __("Export"));
+
+                frm.add_custom_button(__("Download Excel"), function () {
+                    const url = "/api/method/" +
+                        "zkteco_attendance.zkteco_attendance.doctype.attendance_summary.attendance_summary" +
+                        ".download_summary_excel" +
+                        "?name=" + encodeURIComponent(frm.doc.name);
+                    frappe.show_alert({ message: __("Preparing Excel download…"), indicator: "blue" }, 4);
+                    window.location.href = url;
+                }, __("Export"));
+            }
+
             // ── Add Manual Check-in (requires Checkin Editor role) ────────
             if (frappe.user_roles.includes("Checkin Editor")) {
                 frm.add_custom_button(__("Add Check-in"), function () {

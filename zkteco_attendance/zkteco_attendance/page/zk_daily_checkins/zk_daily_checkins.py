@@ -733,6 +733,8 @@ _EXCEL_SUMMARY_COLUMNS = (
     ("shift_type",      _("Shift")),
     ("working_days",    _("Working Days")),
     ("absent_days",     _("Absent Days")),
+    ("late_minutes",    _("Late (min)")),
+    ("early_minutes",   _("Early (min)")),
     ("invalid_days",    _("Invalid Days")),
     ("review_days",     _("Review Needed")),
     ("total_hours",     _("Total Hours")),
@@ -779,6 +781,8 @@ def _employee_summary(emp):
     summary = {
         "working_days": 0.0,
         "absent_days":  0,
+        "late_minutes": 0,
+        "early_minutes": 0,
         "invalid_days": 0,
         "review_days":  0,
         "total_hours":  0.0,
@@ -802,6 +806,9 @@ def _employee_summary(emp):
             summary["review_days"] += 1
         elif status == "Holiday":
             summary["working_days"] += 1.0
+
+        summary["late_minutes"]  += int(flt(d.get("late_minutes") or 0))
+        summary["early_minutes"] += int(flt(d.get("early_minutes") or 0))
 
         summary["total_hours"] += flt(d.get("hours") or 0)
         summary["day_ot_hours"]     += flt(d.get("day_ot_hours") or 0)
@@ -948,7 +955,8 @@ def _build_excel_workbook(data):
     # Grand totals row
     if employees:
         grand = {
-            "working_days": 0.0, "absent_days": 0, "invalid_days": 0,
+            "working_days": 0.0, "absent_days": 0, "late_minutes": 0,
+            "early_minutes": 0, "invalid_days": 0,
             "review_days": 0, "total_hours": 0.0, "day_ot_hours": 0.0,
             "night_ot_hours": 0.0, "weekend_ot_hours": 0.0,
             "holiday_ot_hours": 0.0, "overtime_hours": 0.0,
